@@ -1,0 +1,61 @@
+using UnityEngine;
+using System.Collections;
+[RequireComponent(typeof(CharacterController))]
+
+public class PlayerController : MonoBehaviour 
+{
+	public float 				speed;
+	public float 				cameraDistance;
+	public float 				cameraPositionSmooth;
+
+	private Camera				myCamera;	
+	private Vector3				movementDir;
+	private Transform			myTransform;
+	private CharacterController playerChar;
+
+	void Start () 
+	{
+		initializeGame();
+	}
+
+	void Update () 
+	{
+		cameraFollow();
+		movement();
+	}
+
+	void initializeGame()
+	{
+		playerChar  = GetComponent<CharacterController>();
+		myTransform = transform;
+		myCamera 	= Camera.main;
+	}
+
+	void movement()
+	{
+		if(Input.mousePosition.x > Screen.width/2f)
+		{
+			myTransform.rotation = Quaternion.Euler(0f, 0f, 0f);
+		}
+		if(Input.mousePosition.x < Screen.width/2f)
+		{
+			myTransform.rotation = Quaternion.Euler(0f, 180f, 0f);
+		}
+
+		movementDir = new Vector3(Input.GetAxis("Horizontal") * speed, 0f, 0f);
+		
+		playerChar.SimpleMove(movementDir);
+	}
+
+	void cameraFollow()
+	{
+		Vector3 lerpToPos = new Vector3(myTransform.position.x, myTransform.position.y + 1f, myTransform.position.z - cameraDistance);
+		myCamera.transform.position = Vector3.Lerp(myCamera.transform.position, lerpToPos, Time.deltaTime * cameraPositionSmooth);
+
+		if(Input.GetAxis("Mouse ScrollWheel") != 0)
+		{
+			cameraDistance += Input.GetAxis("Mouse ScrollWheel") * -10f;
+			cameraDistance = Mathf.Clamp(cameraDistance ,8f, 14f);
+		}
+	}
+}
