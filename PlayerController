@@ -20,15 +20,15 @@ public class PlayerController : MonoBehaviour
 
 	void Update () 
 	{
-		cameraFollow();
 		movement();
+		cameraFollow();
 	}
 
 	void initializeGame()
 	{
 		playerChar  = GetComponent<CharacterController>();
 		myTransform = transform;
-		myCamera 	= Camera.main;
+		myCamera    = Camera.main;
 	}
 
 	void movement()
